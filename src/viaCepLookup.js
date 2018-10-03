@@ -11,14 +11,15 @@ export class ViaCepLookup {
 
     return this.scriptTag(apiUrl, hash)
       .then(data => {
+        console.log(data)
         if (data.erro) {
-          return {statusCode: 404, msg: 'CEP não foi encontrado'}
+          return {statusCode: 404, error: 'CEP não foi encontrado'}
         } else if (data.logradouro) {
           return {statusCode: 200, address: data};
         }
       })
       .catch(() => {
-          return {statusCode: 400, msg: 'Erro ao pesquisar CEP'}
+          return {statusCode: 400, error: 'Erro ao pesquisar CEP'}
       });
   }
 
