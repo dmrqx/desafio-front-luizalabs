@@ -1,15 +1,20 @@
 import React from 'react';
-import styles from './SearchInput.module.css';
+import { InputField } from '../components/atoms/InputField';
+
 import { applyMask } from '../utils/searchInputHelpers';
 
 export const SearchInput = (props) => (
-  <input
-    className={styles.default}
+  <InputField
+    id="cep"
+    label="CEP"
     maxLength="9"
     minLength="9"
+    name="cep"
     pattern="\d{5}-\d{3}"
     required
+    tabindex="1"
     type="search"
     value={applyMask(props.value)}
-    onChange={props.handleChange} />
+    handleChange={props.handleChange}
+  />
 );

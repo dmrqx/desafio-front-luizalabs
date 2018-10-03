@@ -1,7 +1,8 @@
 import React from 'react';
+import { Button } from '../components/atoms/Button';
 
 export const SearchSubmit = ({disabled, searching}) => (
-  <button disabled={disabled}>
+  <Button disabled={disabled}>
     {searching ? 'Buscando' : 'Buscar'}
-  </button>
+  </Button>
 );

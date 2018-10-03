@@ -4,6 +4,8 @@ import { SearchInput } from './SearchInput';
 import { SearchSubmit } from './SearchSubmit';
 import { removeMask } from '../utils/searchInputHelpers';
 
+import styles from './SearchForm.module.css';
+
 const initialState = {
   validity: false,
   value: '',
@@ -27,11 +29,14 @@ export class SearchForm extends Component {
     const isSearching = this.props.searching;
 
     return (
-      <form onSubmit={(e) => this.props.handleSubmit(e, this.state.value)}>
-        <SearchInput handleChange={this.handleChange}
-          value={this.state.value} />
-        <SearchSubmit disabled={!isValid || isSearching}
-          searching={isSearching} />
+      <form className={styles.container} onSubmit={(e) => this.props.handleSubmit(e, this.state.value)}>
+        <h1>Consultar</h1>
+        <div className={styles.formgroup}>
+          <SearchInput handleChange={this.handleChange}
+            value={this.state.value} />
+          <SearchSubmit disabled={!isValid || isSearching}
+            searching={isSearching} />
+        </div>
       </form>
     )
   }

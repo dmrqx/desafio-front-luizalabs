@@ -29,22 +29,22 @@ class App extends Component {
   handleSubmit = (event, cep) => {
     event.preventDefault();
 
-    if (this.shouldSubmit(cep)) {
-      this.setState({searching: true});
-      const viaCep = new ViaCepLookup();
-      viaCep.queryCep(cep).then(res => {
-        this.setState(prevState => ({
-          ceps: [...prevState.ceps, cep],
-          searching: false
-        }));
+    // if (this.shouldSubmit(cep)) {
+    //   this.setState({searching: true});
+    //   const viaCep = new ViaCepLookup();
+    //   viaCep.queryCep(cep).then(res => {
+    //     this.setState(prevState => ({
+    //       ceps: [...prevState.ceps, cep],
+    //       searching: false
+    //     }));
 
-        console.log(res)
+    //     console.log(res)
 
-        // if (res.address) {
-        //   this.handleSuccess(res.address)
-        // }
-      })
-    }
+    //     // if (res.address) {
+    //     //   this.handleSuccess(res.address)
+    //     // }
+    //   })
+    // }
   }
 
 
@@ -88,7 +88,6 @@ class App extends Component {
 
     return (
       <div>
-        <h1>Consultar cep</h1>
         {errorMsg}
 
         {addressStr}
