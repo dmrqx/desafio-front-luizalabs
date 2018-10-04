@@ -3,6 +3,7 @@
   /* border-bottom: 3px solid; */
   border-radius: 3px;
   cursor: pointer;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
@@ -17,7 +18,7 @@
   background-color: #00aeef;
   box-shadow: 0 4px 6px -2px #0076a3;
   top: 0;
-  transition: all .25s;
+  transition: all .15s;
 }
 
 .primary:hover {
@@ -31,9 +32,9 @@
   top: 4px;
 }
 
-.disabled {
-  composes: btn;
+.primary:disabled {
   color: #000;
   background-color: #fff;
   border-bottom-color: #d9d9d9;
+  box-shadow: 0 1px 8px -2px #aaaaaa;
 }
