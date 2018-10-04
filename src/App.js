@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ViaCepLookup } from './viaCepLookup';
 
 import { SearchForm } from './search/SearchForm';
-import { MapTile } from './Map';
+import { OpenStreetMap } from './OpenStreetMap';
 
 import { sameDigits, lastSubmitted, removeMask } from './utils/searchInputHelpers';
 
@@ -15,18 +15,20 @@ class App extends Component {
 
     this.state = {
       addresses: [],
-      errorMessage: '',
-      formValidity: false,
       ceps: [],
       currentCep: '',
+      errorMessage: '',
+      formValidity: false,
+      latitude: null,
+      longitude: null,
       searching: false,
     };
   }
 
   handleChange = ({target}) => {
-    this.setState(
-      {
+    this.setState({
         currentCep: removeMask(target.value),
+        errorMessage: '',
         formValidity: target.validity.valid,
       },
       () => {
@@ -40,27 +42,44 @@ class App extends Component {
   handleSubmit = (event, cep) => {
     event.preventDefault();
 
-      this.setState({searching: true});
-      const viaCep = new ViaCepLookup();
-      viaCep.queryCep(cep).then(res => {
+    this.setState({
+      currentCep: '',
+      formValidity: false,
+      searching: true
+    });
+
+    const viaCep = new ViaCepLookup();
+    viaCep.queryCep(cep)
+      .then(({errorMessage = '', ...address}) => {
+        if (errorMessage) {
+          throw new Error(errorMessage);
+        }
+
         this.setState(prevState => ({
+          addresses: [...prevState.addresses, address],
           ceps: [...prevState.ceps, cep],
-          searching: false
         }));
 
-        // if (res.address) {
-        //   this.handleSuccess(res.address)
-        // }
+        return address;
       })
+      .then(address => this.geocodeAddress(address))
+      .catch(error => this.setState({errorMessage: error.message}))
+      .finally(() => this.setState({searching: false}));
   }
 
-  handleSuccess = (address) => {
-    this.setState(prevState => ({addresses: [...prevState.addresses, address], error: false, errors: []}));
-    const url = `https://nominatim.openstreetmap.org/search/br/${address.uf}/${address.localidade}/${address.logradouro}?format=json`;
-
+  geocodeAddress = ({uf, localidade, logradouro = ''}) => {
+    const url = `https://nominatim.openstreetmap.org/search/br/${uf}/${localidade}/${logradouro}?format=json`;
     fetch(url)
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => {
+        if (!data.length) {
+          // TODO: Handle position not found
+          return
+        }
+
+        const {lat, lon} = data[0];
+        this.setState({latitude: lat, longitude: lon, zoom: 16});
+      });
   }
 
   validateCep() {
@@ -80,6 +99,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <p>{this.state.errorMessage}</p>
         <SearchForm
           currentCep={this.state.currentCep}
           formValidity={this.state.formValidity}
@@ -88,7 +108,11 @@ class App extends Component {
           searching={this.state.searching}
         />
 
-        <MapTile />
+        <OpenStreetMap
+          latitude={this.state.latitude}
+          longitude={this.state.longitude}
+          zoom={this.state.zoom}
+        />
       </div>
     );
   }
