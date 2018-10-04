@@ -1,43 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { SearchInput } from './SearchInput';
 import { SearchSubmit } from './SearchSubmit';
-import { removeMask } from '../utils/searchInputHelpers';
 
 import styles from './SearchForm.module.css';
 
-const initialState = {
-  validity: false,
-  value: '',
-};
+export const SearchForm = (props) => {
 
-export class SearchForm extends Component {
-  constructor (props) {
-    super(props);
-    this.state = initialState;
-  }
+  const isValid = props.formValidity;
+  const isSearching = props.searching;
 
-  handleChange = ({target}) => {
-    this.setState({
-      value: removeMask(target.value),
-      validity: target.validity.valid,
-    });
-  }
-
-  render() {
-    const isValid = this.state.validity;
-    const isSearching = this.props.searching;
-
-    return (
-      <form className={styles.container} onSubmit={(e) => this.props.handleSubmit(e, this.state.value)}>
-        <h1>Consultar</h1>
-        <div className={styles.formgroup}>
-          <SearchInput handleChange={this.handleChange}
-            value={this.state.value} />
-          <SearchSubmit disabled={!isValid || isSearching}
-            searching={isSearching} />
-        </div>
-      </form>
+  return (
+    <form className={styles.container}
+      onSubmit={(e) => props.handleSubmit(e, props.currentCep)}
+    >
+      <h1>Consultar</h1>
+      <div className={styles.formgroup}>
+        <SearchInput handleChange={props.handleChange}
+          value={props.currentCep} />
+        <SearchSubmit disabled={!isValid || isSearching}
+          searching={isSearching} />
+      </div>
+    </form>
     )
-  }
 }
