@@ -12,7 +12,7 @@ export const SearchInput = (props) => (
     name="cep"
     pattern="\d{5}-\d{3}"
     required
-    tabindex="1"
+    tabIndex="1"
     type="search"
     value={applyMask(props.value)}
     handleChange={props.handleChange}
