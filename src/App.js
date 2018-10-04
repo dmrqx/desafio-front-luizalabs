@@ -4,7 +4,7 @@ import { ViaCepLookup } from './viaCepLookup';
 import { SearchForm } from './search/SearchForm';
 import { MapTile } from './Map';
 
-import { sameDigits, lastSubmitted } from './utils/searchInputHelpers';
+import { sameDigits, lastSubmitted, removeMask } from './utils/searchInputHelpers';
 
 import './App.css';
 import './leaflet.css';
@@ -14,39 +14,45 @@ class App extends Component {
     super();
 
     this.state = {
-      error: false,
-      errorMsg: '',
-      ceps: [],
       addresses: [],
+      errorMessage: '',
+      formValidity: false,
+      ceps: [],
+      currentCep: '',
       searching: false,
     };
   }
 
-  handleError = (errorMsg) => {
-    this.setState(state => ({error: true, errorMsg: errorMsg}))
+  handleChange = ({target}) => {
+    this.setState(
+      {
+        currentCep: removeMask(target.value),
+        formValidity: target.validity.valid,
+      },
+      () => {
+        if (this.state.currentCep.length === 8) {
+          this.validateCep()
+        }
+      }
+    );
   }
 
   handleSubmit = (event, cep) => {
     event.preventDefault();
 
-    // if (this.shouldSubmit(cep)) {
-    //   this.setState({searching: true});
-    //   const viaCep = new ViaCepLookup();
-    //   viaCep.queryCep(cep).then(res => {
-    //     this.setState(prevState => ({
-    //       ceps: [...prevState.ceps, cep],
-    //       searching: false
-    //     }));
+      this.setState({searching: true});
+      const viaCep = new ViaCepLookup();
+      viaCep.queryCep(cep).then(res => {
+        this.setState(prevState => ({
+          ceps: [...prevState.ceps, cep],
+          searching: false
+        }));
 
-    //     console.log(res)
-
-    //     // if (res.address) {
-    //     //   this.handleSuccess(res.address)
-    //     // }
-    //   })
-    // }
+        // if (res.address) {
+        //   this.handleSuccess(res.address)
+        // }
+      })
   }
-
 
   handleSuccess = (address) => {
     this.setState(prevState => ({addresses: [...prevState.addresses, address], error: false, errors: []}));
@@ -57,14 +63,14 @@ class App extends Component {
       .then(data => console.log(data));
   }
 
-  shouldSubmit(cep) {
-    if (sameDigits(cep)) {
-      // TODO: Add error message
+  validateCep() {
+    if (sameDigits(this.state.currentCep)) {
+      this.setState({errorMessage: 'O CEP digitado não é válido', formValidity: false});
       return false;
     }
 
-    if (lastSubmitted([...this.state.ceps].pop(), cep)) {
-      // TODO: Add error message
+    if (lastSubmitted([...this.state.ceps].pop(), this.state.currentCep)) {
+      this.setState({errorMessage: 'Você acabou de pesquisar esse CEP. Que memória, hein?', formValidity: false});
       return false;
     }
 
@@ -72,29 +78,15 @@ class App extends Component {
   }
 
   render() {
-    const hasError = this.state.error;
-    let errorMsg;
-    if (hasError) {
-      errorMsg = <ul><li style={{color: 'red'}}>{this.state.errorMsg}</li></ul>;
-    }
-
-    const address = this.state.address;
-    let addressStr = '';
-    if (address) {
-      addressStr = `${address.cep}: ${address.logradouro} - ${address.uf}`
-    }
-
-    const isSearching = this.state.searching;
-
     return (
       <div>
-        {errorMsg}
-
-        {addressStr}
-
         <SearchForm
+          currentCep={this.state.currentCep}
+          formValidity={this.state.formValidity}
+          handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
-          searching={isSearching} />
+          searching={this.state.searching}
+        />
 
         <MapTile />
       </div>
