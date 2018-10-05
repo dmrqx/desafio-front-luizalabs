@@ -37,8 +37,10 @@ npm test
 
 > **Note:** _No app is ever perfect, but one must strive for excellence. Stay tuned._ :sweat_smile:
 
-- Organize code into components
-- Implement layout
+- Handle address not found
+- Handle empty form submit
+- Style error messages
+- Improve usability
 
 ---
 
