@@ -98,7 +98,7 @@ class App extends Component {
     }
 
     if (lastSubmitted(lastItem(this.state.cepList), this.state.currentCep)) {
-      this.setState({errorMessage: 'Você acabou de pesquisar esse CEP. Que memória, hein?', formValidity: false});
+      this.setState({errorMessage: 'Ops... não foi esse o CEP que você acabou de pesquisar?', formValidity: false});
     }
   }
 
