@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { SearchForm, SearchResult } from './components/organisms';
 
 import { ViaCepLookup } from './utils/viaCepLookup';
-import { addItem, lastPosition } from './utils/listHelpers';
+import { addItem, lastItem } from './utils/listHelpers';
 import { sameDigits, lastSubmitted, removeMask } from './utils/searchInputHelpers';
 
 import './leaflet.css';
@@ -15,10 +15,11 @@ class App extends Component {
     this.state = {
       addresses: [],
       cepList: [],
+      currentAddress: null,
       currentCep: '',
+      currentPosition: null,
       errorMessage: '',
       formValidity: false,
-      position: null,
       searching: false,
     };
   }
@@ -35,6 +36,10 @@ class App extends Component {
         }
       }
     );
+  }
+
+  handleClose = () => {
+    this.setState({currentAddress: null, currentPosition: null});
   }
 
   handleSubmit = (event, cep) => {
@@ -56,6 +61,7 @@ class App extends Component {
         this.setState(prevState => ({
           addresses: addItem(prevState.addresses, address),
           cepList: addItem(prevState.cepList, cep),
+          currentAddress: {...prevState.currentAddress, ...address}
         }));
 
         return address;
@@ -77,8 +83,8 @@ class App extends Component {
 
         const {lat, lon} = data[0];
         this.setState(prevState => ({
-          position: {
-              ...prevState.position,
+          currentPosition: {
+              ...prevState.currentPosition,
               latitude: lat,
               longitude: lon
           }
@@ -91,14 +97,14 @@ class App extends Component {
       this.setState({errorMessage: 'O CEP digitado não é válido', formValidity: false});
     }
 
-    if (lastSubmitted(lastPosition(this.state.cepList), this.state.currentCep)) {
+    if (lastSubmitted(lastItem(this.state.cepList), this.state.currentCep)) {
       this.setState({errorMessage: 'Você acabou de pesquisar esse CEP. Que memória, hein?', formValidity: false});
     }
   }
 
   render() {
-    const address = lastPosition(this.state.addresses),
-          position = this.state.position;
+    const address = this.state.currentAddress,
+          position = this.state.currentPosition;
 
     return (
       <div>
@@ -111,7 +117,11 @@ class App extends Component {
           searching={this.state.searching}
         />
 
-        <SearchResult address={address} position={position} />
+        <SearchResult
+          address={address}
+          position={position}
+          handleClose={this.handleClose}
+        />
       </div>
     );
   }

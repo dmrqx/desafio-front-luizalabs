@@ -1,8 +1,13 @@
 import React from 'react';
+import { Button } from '../atoms';
 import { Address, OpenStreetMap } from '../molecules';
 
-export const SearchResult = ({address, position}) => (
+export const SearchResult = ({address, position, handleClose}) => (
   <div>
+    {(address || position) &&
+      <Button handleClick={handleClose} variant='icon'>X</Button>
+    }
+
     {address &&
       <Address
         title={address.logradouro ? address.logradouro : `${address.localidade} - ${address.uf}`}
@@ -12,6 +17,7 @@ export const SearchResult = ({address, position}) => (
         }
       />
     }
+
     {position &&
       <OpenStreetMap {...position} zoom={address.logradouro ? 16 : 14} />
     }

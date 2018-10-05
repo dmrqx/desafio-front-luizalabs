@@ -31,9 +31,27 @@
   top: 4px;
 }
 
-.primary:disabled {
+.disabled {
+  composes: btn;
   color: #000;
   background-color: #fff;
   border-bottom-color: #d9d9d9;
   box-shadow: 0 1px 8px -2px #aaaaaa;
+  top: 0;
+  transition: all .15s;
+}
+
+.disabled:active {
+  position: relative;
+  top: 4px;
+}
+
+.disabled:focus {
+  outline: 1px auto rgb(206, 57, 57);
+}
+
+.icon {
+  composes: btn;
+  border-radius: 50%;
+  background-color: red;
 }
