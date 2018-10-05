@@ -11,10 +11,8 @@ const DefaultIcon = new L.icon({
     iconAnchor: [10, 46],
 });
 
-export const OpenStreetMap = ({latitude, longitude, zoom = 4}) => {
-  const lat = latitude || -10.3333,
-        lon = longitude || -53.2,
-        position = [lat, lon];
+export const OpenStreetMap = ({latitude, longitude, zoom}) => {
+  const position = [latitude, longitude];
 
   return (
     <Map center={position} zoom={zoom}>

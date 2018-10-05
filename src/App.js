@@ -18,8 +18,7 @@ class App extends Component {
       currentCep: '',
       errorMessage: '',
       formValidity: false,
-      latitude: null,
-      longitude: null,
+      position: null,
       searching: false,
     };
   }
@@ -77,8 +76,14 @@ class App extends Component {
         }
 
         const {lat, lon} = data[0];
-        this.setState({latitude: lat, longitude: lon, zoom: 16});
-      });
+        this.setState(prevState => ({
+          position: {
+              ...prevState.position,
+              latitude: lat,
+              longitude: lon
+          }
+        }))
+      })
   }
 
   validateCep() {
@@ -92,7 +97,8 @@ class App extends Component {
   }
 
   render() {
-    const address = lastPosition(this.state.addresses) || {};
+    const address = lastPosition(this.state.addresses),
+          position = this.state.position;
 
     return (
       <div>
@@ -105,7 +111,7 @@ class App extends Component {
           searching={this.state.searching}
         />
 
-        <SearchResult />
+        <SearchResult address={address} position={position} />
       </div>
     );
   }
