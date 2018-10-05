@@ -1,7 +1,7 @@
 import React from 'react';
-import { InputField } from '../components/atoms/InputField';
+import { InputField } from '../atoms/InputField';
 
-import { applyMask } from '../utils/searchInputHelpers';
+import { applyMask } from '../../utils/searchInputHelpers';
 
 export const SearchInput = (props) => (
   <InputField

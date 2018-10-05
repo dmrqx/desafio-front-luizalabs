@@ -1,6 +1,5 @@
 import React from 'react';
-import { AddressTitle } from '../atoms/AddressTitle';
-import { AddressLine } from '../atoms/AddressLine';
+import { AddressLine, AddressTitle } from '../atoms';
 
 export const Address = ({title, lines}) => (
   <div>

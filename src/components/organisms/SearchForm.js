@@ -1,7 +1,5 @@
 import React from 'react';
-
-import { SearchInput } from './SearchInput';
-import { SearchSubmit } from './SearchSubmit';
+import { SearchInput, SearchSubmit } from '../molecules';
 
 import styles from './SearchForm.module.css';
 
