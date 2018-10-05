@@ -6,7 +6,7 @@ export const SearchSubmit = ({disabled, searching}) => {
   if (disabled) {
     handleClick = (event) => {
       event.preventDefault();
-      console.log('aaa');
+      // TODO: Handle empty submit
     }
   }
   return (
