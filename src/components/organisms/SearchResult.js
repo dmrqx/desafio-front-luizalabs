@@ -3,9 +3,9 @@ import { Button } from '../atoms';
 import { Address, OpenStreetMap } from '../molecules';
 
 export const SearchResult = ({address, position, handleClose}) => (
-  <div>
+  <div className='container'>
     {(address || position) &&
-      <Button handleClick={handleClose} variant='icon'>X</Button>
+      <Button handleClick={handleClose} variant='close' />
     }
 
     {address &&

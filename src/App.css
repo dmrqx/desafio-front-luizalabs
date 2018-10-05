@@ -4,7 +4,17 @@ body {
   font-family: 'Open Sans', Ubuntu, Tahoma, Helvetica, sans-serif;
 }
 
+.container {
+  margin: 0 auto;
+  position: relative;
+  width: 70vw;
+}
+
 .leaflet-container {
-  height: 480px;
-  width: 640px;
+  width: 100%;
+  padding-bottom: 50vh;
+}
+
+.mb__20 {
+  margin-bottom: 20px;
 }

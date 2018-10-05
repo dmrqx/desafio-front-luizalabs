@@ -2,7 +2,7 @@ import React from 'react';
 import { AddressLine, AddressTitle } from '../atoms';
 
 export const Address = ({title, lines}) => (
-  <div>
+  <div className='mb__20'>
     <AddressTitle text={title} />
     {lines.map((line, index) =>
       <AddressLine

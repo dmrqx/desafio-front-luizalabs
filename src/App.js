@@ -107,7 +107,7 @@ class App extends Component {
           position = this.state.currentPosition;
 
     return (
-      <div>
+      <div className='container'>
         <p>{this.state.errorMessage}</p>
         <SearchForm
           currentCep={this.state.currentCep}

@@ -50,8 +50,36 @@
   outline: 1px auto rgb(206, 57, 57);
 }
 
-.icon {
+.close {
   composes: btn;
-  border-radius: 50%;
-  background-color: red;
+  background: none;
+  opacity: 1;
+  transition: opacity .3s;
+  position: absolute;
+  right: 0;
+}
+
+.close:after,
+.close:before {
+  border-top: 2px solid #000;
+  content:'';
+  height: 20px;
+  position: absolute;
+  right: -8px;
+  top: 7px;
+  transform: rotate(-45deg);
+  width: 20px;
+}
+
+.close:before {
+  right:6px;
+  transform: rotate(45deg);
+}
+
+.close:hover {
+  opacity: .5;
+}
+
+.close:focus {
+  outline: none;
 }
