@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { ViaCepLookup } from './viaCepLookup';
 
 import { SearchForm } from './search/SearchForm';
+import { Address } from './components/molecules/Address';
 import { OpenStreetMap } from './OpenStreetMap';
 
+import { ViaCepLookup } from './utils/viaCepLookup';
+import { addItem, lastPosition } from './utils/listHelpers';
 import { sameDigits, lastSubmitted, removeMask } from './utils/searchInputHelpers';
 
-import './App.css';
 import './leaflet.css';
+import './App.css';
 
 class App extends Component {
   constructor() {
@@ -15,7 +17,7 @@ class App extends Component {
 
     this.state = {
       addresses: [],
-      ceps: [],
+      cepList: [],
       currentCep: '',
       errorMessage: '',
       formValidity: false,
@@ -56,8 +58,8 @@ class App extends Component {
         }
 
         this.setState(prevState => ({
-          addresses: [...prevState.addresses, address],
-          ceps: [...prevState.ceps, cep],
+          addresses: addItem(prevState.addresses, address),
+          cepList: addItem(prevState.cepList, cep),
         }));
 
         return address;
@@ -67,7 +69,7 @@ class App extends Component {
       .finally(() => this.setState({searching: false}));
   }
 
-  geocodeAddress = ({uf, localidade, logradouro = ''}) => {
+  geocodeAddress({uf, localidade, logradouro = ''}) {
     const url = `https://nominatim.openstreetmap.org/search/br/${uf}/${localidade}/${logradouro}?format=json`;
     fetch(url)
       .then(response => response.json())
@@ -85,18 +87,16 @@ class App extends Component {
   validateCep() {
     if (sameDigits(this.state.currentCep)) {
       this.setState({errorMessage: 'O CEP digitado não é válido', formValidity: false});
-      return false;
     }
 
-    if (lastSubmitted([...this.state.ceps].pop(), this.state.currentCep)) {
+    if (lastSubmitted(lastPosition(this.state.cepList), this.state.currentCep)) {
       this.setState({errorMessage: 'Você acabou de pesquisar esse CEP. Que memória, hein?', formValidity: false});
-      return false;
     }
-
-    return true;
   }
 
   render() {
+    const address = lastPosition(this.state.addresses) || {};
+
     return (
       <div>
         <p>{this.state.errorMessage}</p>
@@ -106,6 +106,14 @@ class App extends Component {
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
           searching={this.state.searching}
+        />
+
+        <Address
+          title={address.logradouro ? address.logradouro : `${address.localidade} - ${address.uf}`}
+          lines={address.logradouro
+            ? [{text: address.bairro, addMargin: true}, {text: `${address.localidade} - ${address.uf}`}, {text: address.cep}]
+            : [{text: address.cep, addMargin: true}]
+          }
         />
 
         <OpenStreetMap
